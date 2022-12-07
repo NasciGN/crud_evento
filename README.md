@@ -1,2 +1,8 @@
-# crud_evento
-Repositório referente a atividade final das disciplinas de programação e banco de dados
+# Evento - CBBD
+Aluno: Gabriel Nascimento
+
+## Banco de dados
+Segue os tipos de banco de dados
+### Mododelo conceitual
+### Modelo lógico
+
