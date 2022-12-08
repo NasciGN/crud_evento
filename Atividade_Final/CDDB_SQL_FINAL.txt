@@ -1,0 +1,218 @@
+CREATE DATABASE evento_ads;
+USE evento_ads;
+
+CREATE TABLE Membro (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    instituicao VARCHAR(100),
+    area_espec VARCHAR(40),
+    email VARCHAR(80),
+    endereco_cep VARCHAR(9),
+    endereco_numero VARCHAR(4),
+    telefone VARCHAR(14),
+    fax VARCHAR(15)
+);
+
+CREATE TABLE Comite (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    descricao VARCHAR(200)
+);
+
+CREATE TABLE Analise_artigo (
+    comite INT,
+    membro INT,
+    artigo INT,
+    ID INT PRIMARY KEY,
+	nota FLOAT(4),
+    selecionado BOOLEAN,
+    arquivo_Final BOOLEAN,
+    data VARCHAR(14),
+    hora VARCHAR(100)
+);
+
+CREATE TABLE Artigo (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(40),
+    palavras_Chave VARCHAR(40),
+	autor_id INT
+);
+
+
+
+CREATE TABLE Autor (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    instituicao VARCHAR(100),
+	email VARCHAR(80)
+);
+
+CREATE TABLE Sala_Auditorio (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    capacidade INT
+);
+
+CREATE TABLE Evento (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    recursos VARCHAR(400),
+    tipoevento CHAR,
+    valor_inscricao FLOAT(5)
+);
+
+CREATE TABLE SessoesTec (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(200),
+    tipo CHAR,
+    autor INT
+);
+
+CREATE TABLE Palestras (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    tema VARCHAR(60),
+    titulo VARCHAR(40),
+    instituicao VARCHAR(100),
+    tipo CHAR,
+    convidado INT
+);
+
+CREATE TABLE Minicurso (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(40),
+    instituicao VARCHAR(100),
+    tema VARCHAR(60),
+    tipo CHAR,
+    convidado INT
+);
+
+CREATE TABLE Convidado (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    formacao VARCHAR(40),
+    data_chegada VARCHAR(11),
+    data_saida VARCHAR(11),
+    data_voo_chegada VARCHAR(11),
+    data_voo_saida VARCHAR(11),
+    hora_voo_chegada VARCHAR(9),
+    hora_voo_saida VARCHAR(9)
+);
+
+CREATE TABLE Participante (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    instituicao VARCHAR(100),
+    endereco_CEP VARCHAR(9),
+    endereco_Numero VARCHAR(4),
+    telefone VARCHAR(14),
+    email VARCHAR(80),
+    categoria INT
+);
+
+CREATE TABLE Categoria (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(40)
+);
+
+CREATE TABLE Agendar_local (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    data VARCHAR(11),
+    hora VARCHAR(9),
+    evento INT,
+    membro INT,
+    Local INT
+);
+
+CREATE TABLE Inscricao (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    evento INT,
+    participante INT,
+    data VARCHAR(11),
+    hora VARCHAR(9)
+);
+
+CREATE TABLE Tipo_Evento (
+    evento INT,
+    sessao_tecnica INT,
+    palestra INT,
+    minicurso INT
+);
+ 
+ 
+ALTER TABLE Analise_artigo ADD CONSTRAINT Analise_Comite
+    FOREIGN KEY (comite)
+    REFERENCES Comite (ID);
+ 
+ALTER TABLE Analise_artigo ADD CONSTRAINT Analise_Membro
+    FOREIGN KEY (membro)
+    REFERENCES Membro (ID);
+ 
+ALTER TABLE Analise_artigo ADD CONSTRAINT Analise_Artigo
+    FOREIGN KEY (artigo)
+    REFERENCES Artigo (ID);
+ 
+ 
+
+ALTER TABLE SessoesTec ADD CONSTRAINT SessoesTec_Autor
+    FOREIGN KEY (autor)
+    REFERENCES Autor (ID)
+    ON DELETE CASCADE;
+ 
+ 
+ 
+ALTER TABLE Palestras ADD CONSTRAINT Palestras_Convidado
+    FOREIGN KEY (convidado)
+    REFERENCES Convidado (ID)
+    ON DELETE RESTRICT;
+ 
+ 
+ 
+ALTER TABLE Minicurso ADD CONSTRAINT Minicurso_Convidado
+    FOREIGN KEY (convidado)
+    REFERENCES Convidado (ID)
+    ON DELETE RESTRICT;
+	
+
+ 
+ALTER TABLE Participante ADD CONSTRAINT Participante_Categoria
+    FOREIGN KEY (categoria)
+    REFERENCES Categoria (ID);
+
+ 
+ALTER TABLE Agendar_local ADD CONSTRAINT Agendar_Sala_Evento
+    FOREIGN KEY (evento)
+    REFERENCES Evento (ID);
+ALTER TABLE Agendar_local ADD CONSTRAINT Agendar_Sala_Membro
+    FOREIGN KEY (membro)
+    REFERENCES Membro (ID);
+ALTER TABLE Agendar_local ADD CONSTRAINT Agendar_Sala_Sala_Auditorio
+    FOREIGN KEY (Local)
+    REFERENCES Sala_Auditorio (ID);
+ 
+ALTER TABLE Inscricao ADD CONSTRAINT Inscricao_Evento
+    FOREIGN KEY (evento)
+    REFERENCES Evento (ID); 
+ALTER TABLE Inscricao ADD CONSTRAINT Inscricao_Participante
+    FOREIGN KEY (participante)
+    REFERENCES Participante (ID);
+ 
+ ALTER TABLE Artigo ADD CONSTRAINT Artigo_Autor
+	FOREIGN KEY (autor_id)
+	REFERENCES Autor (ID)
+	ON DELETE CASCADE;
+	
+ALTER TABLE Tipo_Evento ADD CONSTRAINT Tipo_Evento_Evento
+    FOREIGN KEY (evento)
+    REFERENCES Evento (ID)
+    ON DELETE RESTRICT;
+ALTER TABLE Tipo_Evento ADD CONSTRAINT Tipo_Evento_SessoesTec
+    FOREIGN KEY (sessao_tecnica)
+    REFERENCES SessoesTec (ID)
+    ON DELETE NO ACTION;
+ALTER TABLE Tipo_Evento ADD CONSTRAINT Tipo_Evento_Palestras
+    FOREIGN KEY (palestra)
+    REFERENCES Palestras (ID)
+    ON DELETE NO ACTION;
+ALTER TABLE Tipo_Evento ADD CONSTRAINT Tipo_Evento_Minicurso
+    FOREIGN KEY (minicurso)
+    REFERENCES Minicurso (ID)
+    ON DELETE NO ACTION;
